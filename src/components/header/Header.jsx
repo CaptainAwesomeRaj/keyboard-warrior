@@ -1,7 +1,7 @@
 import { Stack } from "react-bootstrap";
 import { BsKeyboard } from "react-icons/bs";
 import './Header.css';
-export default function(){
+export default function Header(){
     return(
         <>  
             <header>

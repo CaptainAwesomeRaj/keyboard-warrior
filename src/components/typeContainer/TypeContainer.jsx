@@ -10,7 +10,6 @@ export default function TypeContainer(){
     useEffect(
         ()=>{
             setText(generate(1000).map((str)=>str.split('')));
-            var element = document.querySelector(".word" + word + "" + char);
         },[]
         )
     function textMapFunc(word,index){
@@ -20,7 +19,7 @@ export default function TypeContainer(){
     }
     function handleInput(event){
         var element;
-        if(text[word].length == char){
+        if(text[word].length === char){
             element = document.querySelector(".space"+word);
             element.style.borderBottom = "none";
             element = document.querySelector(".word"+(word+1) + "" +0)
@@ -40,7 +39,7 @@ export default function TypeContainer(){
             element.style.borderBottom = "2px solid white";
             setChar((x)=>x + 1);
         }
-        const key = event.key || String.fromCharCode(event.keyCode);
+        // const key = event.key || String.fromCharCode(event.keyCode);
     }
     return(
         <>  
