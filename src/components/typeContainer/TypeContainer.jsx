@@ -91,7 +91,7 @@ export default function TypeContainer(){
                                 {
                                     fontSize: "16px",
                                     position:"absolute",
-                                    top:document.querySelector(".type-container").scrollTop,
+                                    top:document.querySelector(".type-container")?.scrollTop,
                                     width:"100%",
                                     height:"100%",
                                 }
