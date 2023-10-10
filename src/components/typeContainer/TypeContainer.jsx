@@ -1,5 +1,5 @@
 import { generate } from "random-words";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect} from "react";
 import { Alert, Container } from "react-bootstrap";
 import './TypeContainer.css';
 import { AppContext } from "../../context/AppContext";
@@ -16,7 +16,7 @@ export default function TypeContainer(){
     useEffect(
         ()=>{
             setText(generate(1000).map((str)=>str.split('')));
-        },[]
+        },[setText]
         )
     function textMapFunc(word,index){
         const arr =  word.map((ch,idx)=>{return <span className={"word"+index+""+idx} key={"word"+index +""+idx}>{ch}</span>});
