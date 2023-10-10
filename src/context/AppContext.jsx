@@ -9,6 +9,7 @@ export function AppContextProvider(params) {
     const [char,setChar] = useState(0); //stores index for test[word]
     const [isTextFocussed,setIsTextFocussed] = useState(false);
     const [reset,setReset] = useState(0);
+    const [user,setUser] = useState("User");
     
     useEffect(()=>{
         setText(generate(1000).map((str)=>str.split('')));
@@ -26,7 +27,8 @@ export function AppContextProvider(params) {
                     word,setWord,
                     char,setChar,
                     isTextFocussed,setIsTextFocussed,
-                    setReset
+                    setReset,
+                    user,setUser,
                 }
             }
         >
