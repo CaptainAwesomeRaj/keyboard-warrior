@@ -9,7 +9,7 @@ function App() {
     
     <>
       <div className="app-wrapper">
-        <Container style={{height:'100%'}}>
+        <Container style={{height:'100%'}} className='pt-3'>
           <Stack gap={3} style={{height:'100%'}} className='justify-content-between'>
             <Header/>
             <TypeContainer/>

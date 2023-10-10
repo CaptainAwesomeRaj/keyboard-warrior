@@ -1,17 +1,18 @@
 import { generate } from "random-words";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert, Container } from "react-bootstrap";
 import './TypeContainer.css';
+import { AppContext } from "../../context/AppContext";
 export default function TypeContainer(){
-    const [text,setText] = useState([[1]]);
-    const [word,setWord] = useState(0); //stores index for text
-    const [char,setChar] = useState(0); //stores index for test[word]
-    const [isTextFocussed,setIsTextFocussed] = useState(false);
-    const [correctWords,setCorrectWords] = useState(0);
-    const [incorrectWords,setIncorrectWords] = useState(0);
-    const [correctChars,setCorrectChars] = useState(0);
-    const [incorrectChars,setIncorrectChars] = useState(0);
-    const [currentInputWord,setCurrentInputWord] = useState("");
+    const {text,setText} = useContext(AppContext);
+    const {word,setWord} = useContext(AppContext); //stores index for text
+    const {char,setChar} = useContext(AppContext); //stores index for test[word]
+    const {isTextFocussed,setIsTextFocussed} = useContext(AppContext);
+    const {correctWords,setCorrectWords} = useContext(AppContext);
+    const {incorrectWords,setIncorrectWords} = useContext(AppContext);
+    const {correctChars,setCorrectChars} = useContext(AppContext);
+    const {incorrectChars,setIncorrectChars} = useContext(AppContext);
+    const {currentInputWord,setCurrentInputWord} = useContext(AppContext);
     useEffect(
         ()=>{
             setText(generate(1000).map((str)=>str.split('')));
@@ -24,6 +25,7 @@ export default function TypeContainer(){
     }
     function handleInput(event){
         var typeContainer = document.querySelector(".type-container");
+
         const key = event.key || String.fromCharCode(event.keyCode);
         var element;
         if(text[word].length === char){
@@ -86,7 +88,7 @@ export default function TypeContainer(){
                     {text.length && text.map(textMapFunc)}
                     {
                         !isTextFocussed && 
-                        <Alert variant="secondary"
+                        <Alert variant="primary"
                             style={
                                 {
                                     fontSize: "16px",
