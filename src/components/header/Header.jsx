@@ -2,6 +2,7 @@ import { Stack } from "react-bootstrap";
 import { BsKeyboard } from "react-icons/bs";
 import './Header.css';
 import NavBar from "../navbar/NavBar";
+
 export default function Header(){
     return(
         <>  

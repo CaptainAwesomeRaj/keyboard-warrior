@@ -10,6 +10,7 @@ export function AppContextProvider(params) {
     const [isTextFocussed,setIsTextFocussed] = useState(false);
     const [reset,setReset] = useState(0);
     const [user,setUser] = useState("User");
+    const [showNotAvailableMessage,setShowNotAvailableMessage] = useState(false);
     
     useEffect(()=>{
         setText(generate(1000).map((str)=>str.split('')));
@@ -29,6 +30,8 @@ export function AppContextProvider(params) {
                     isTextFocussed,setIsTextFocussed,
                     setReset,
                     user,setUser,
+                    showNotAvailableMessage,
+                    setShowNotAvailableMessage
                 }
             }
         >
