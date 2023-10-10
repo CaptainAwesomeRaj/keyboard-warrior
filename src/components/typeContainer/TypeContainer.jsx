@@ -1,23 +1,12 @@
-import { generate } from "random-words";
-import { useContext, useEffect} from "react";
+import { useContext} from "react";
 import { Alert, Container } from "react-bootstrap";
 import './TypeContainer.css';
 import { AppContext } from "../../context/AppContext";
 export default function TypeContainer(){
-    const {text,setText} = useContext(AppContext);
+    const {text} = useContext(AppContext);
     const {word,setWord} = useContext(AppContext); //stores index for text
     const {char,setChar} = useContext(AppContext); //stores index for test[word]
     const {isTextFocussed,setIsTextFocussed} = useContext(AppContext);
-    const {correctWords,setCorrectWords} = useContext(AppContext);
-    const {incorrectWords,setIncorrectWords} = useContext(AppContext);
-    const {correctChars,setCorrectChars} = useContext(AppContext);
-    const {incorrectChars,setIncorrectChars} = useContext(AppContext);
-    const {currentInputWord,setCurrentInputWord} = useContext(AppContext);
-    useEffect(
-        ()=>{
-            setText(generate(1000).map((str)=>str.split('')));
-        },[setText]
-        )
     function textMapFunc(word,index){
         const arr =  word.map((ch,idx)=>{return <span className={"word"+index+""+idx} key={"word"+index +""+idx}>{ch}</span>});
         arr.push(<span key={index} className={"space"+index}>&nbsp; </span>);
@@ -26,25 +15,48 @@ export default function TypeContainer(){
     function handleInput(event){
         var typeContainer = document.querySelector(".type-container");
 
-        const key = event.key || String.fromCharCode(event.keyCode);
         var element;
+        var key = event.keyCode;
+
+        if(key === 8){  //8 is charCode for backspace
+            if(word === 0 && char === 0){
+                return;
+            }
+            if(char === text[word].length){
+                element = document.querySelector(".space"+word);
+                setChar(char - 1);
+            }
+            else if(char === 0){
+                element = document.querySelector(".word" + word + "" + char);
+                setChar(text[word - 1].length);
+                setWord(word - 1);
+            }
+            else{
+                element = document.querySelector(".word" + word + "" + char);
+                setChar(char - 1);
+            }
+            element.style.borderBottom = "none";
+            element = element.previousSibling;
+            element.style.color = "white";
+            element.style.backgroundColor = "inherit";
+            element.style.borderBottom = "2px solid white";
+            if(element.offsetTop - typeContainer.scrollTop < 4){
+                typeContainer.scrollTop -= 36;
+            }
+            return;
+        }
+
+
+        // here comes if keyCode returns false
+        key = event.key;
         if(text[word].length === char){
             element = document.querySelector(".space"+word);
             element.style.borderBottom = "none";
             if(key === ' '){
-                if(text[word].join("") === currentInputWord){
-                    setCorrectWords(correctWords+1);
-                }
-                else{
-                    setIncorrectWords(incorrectWords+1);
-                }
-                element.classList.add("text-success");
-                setCorrectChars(incorrectChars+1);
+                element.style.color = "green";
             }
             else{
-                setIncorrectWords(incorrectWords+1);
-                element.classList.add("bg-danger");
-                setIncorrectChars(incorrectChars);
+                element.style.backgroundColor = "red";
             }
             element = document.querySelector(".word"+(word+1) + "" +0)
             element.style.borderBottom = "2px solid white";
@@ -57,14 +69,11 @@ export default function TypeContainer(){
         else{
             element = document.querySelector(".word"+word+""+char);
             element.style.borderBottom = "none";
-            setCurrentInputWord(currentInputWord + key);
             if(key === text[word][char]){
-                element.classList.add("text-success");
-                setCorrectChars(correctChars + 1);
+                element.style.color = "green";
             }
             else{
-                element.classList.add("bg-danger");
-                setIncorrectChars(incorrectChars + 1);
+                element.style.backgroundColor = "red";
             }   
             if(char + 1 === text[word].length){
                 element = document.querySelector(".space"+word);

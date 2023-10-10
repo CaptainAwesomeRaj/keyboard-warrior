@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { generate } from "random-words";
 
 export const AppContext = createContext();
 
@@ -7,11 +8,15 @@ export function AppContextProvider(params) {
     const [word,setWord] = useState(0); //stores index for text
     const [char,setChar] = useState(0); //stores index for test[word]
     const [isTextFocussed,setIsTextFocussed] = useState(false);
-    const [correctWords,setCorrectWords] = useState(0);
-    const [incorrectWords,setIncorrectWords] = useState(0);
-    const [correctChars,setCorrectChars] = useState(0);
-    const [incorrectChars,setIncorrectChars] = useState(0);
-    const [currentInputWord,setCurrentInputWord] = useState("");
+    const [reset,setReset] = useState(0);
+    
+    useEffect(()=>{
+        setText(generate(1000).map((str)=>str.split('')));
+        setWord(0);
+        setChar(0);
+        setIsTextFocussed(false);
+    },[reset])
+
     return(
         <AppContext.Provider 
             value={
@@ -21,11 +26,7 @@ export function AppContextProvider(params) {
                     word,setWord,
                     char,setChar,
                     isTextFocussed,setIsTextFocussed,
-                    correctWords,setCorrectWords,
-                    incorrectWords,setIncorrectWords,
-                    correctChars,setCorrectChars,
-                    incorrectChars,setIncorrectChars,
-                    currentInputWord,setCurrentInputWord
+                    setReset
                 }
             }
         >
