@@ -7,6 +7,11 @@ export default function TypeContainer(){
     const [word,setWord] = useState(0); //stores index for text
     const [char,setChar] = useState(0); //stores index for test[word]
     const [isTextFocussed,setIsTextFocussed] = useState(false);
+    const [correctWords,setCorrectWords] = useState(0);
+    const [incorrectWords,setIncorrectWords] = useState(0);
+    const [correctChars,setCorrectChars] = useState(0);
+    const [incorrectChars,setIncorrectChars] = useState(0);
+    const [currentInputWord,setCurrentInputWord] = useState("");
     useEffect(
         ()=>{
             setText(generate(1000).map((str)=>str.split('')));
@@ -18,18 +23,47 @@ export default function TypeContainer(){
         return arr;
     }
     function handleInput(event){
+        var typeContainer = document.querySelector(".type-container");
+        const key = event.key || String.fromCharCode(event.keyCode);
         var element;
         if(text[word].length === char){
             element = document.querySelector(".space"+word);
             element.style.borderBottom = "none";
+            if(key === ' '){
+                if(text[word].join("") === currentInputWord){
+                    setCorrectWords(correctWords+1);
+                }
+                else{
+                    setIncorrectWords(incorrectWords+1);
+                }
+                element.classList.add("text-success");
+                setCorrectChars(incorrectChars+1);
+            }
+            else{
+                setIncorrectWords(incorrectWords+1);
+                element.classList.add("bg-danger");
+                setIncorrectChars(incorrectChars);
+            }
             element = document.querySelector(".word"+(word+1) + "" +0)
             element.style.borderBottom = "2px solid white";
+            if(element.offsetTop - typeContainer.scrollTop === 76){
+                typeContainer.scrollTop += 36;
+            }
             setChar(0);
             setWord((x)=>x + 1);
         }
         else{
             element = document.querySelector(".word"+word+""+char);
             element.style.borderBottom = "none";
+            setCurrentInputWord(currentInputWord + key);
+            if(key === text[word][char]){
+                element.classList.add("text-success");
+                setCorrectChars(correctChars + 1);
+            }
+            else{
+                element.classList.add("bg-danger");
+                setIncorrectChars(incorrectChars + 1);
+            }   
             if(char + 1 === text[word].length){
                 element = document.querySelector(".space"+word);
             }
@@ -39,7 +73,6 @@ export default function TypeContainer(){
             element.style.borderBottom = "2px solid white";
             setChar((x)=>x + 1);
         }
-        // const key = event.key || String.fromCharCode(event.keyCode);
     }
     return(
         <>  
@@ -51,7 +84,20 @@ export default function TypeContainer(){
                     style={{fontFamily:'"Roboto Mono", "Roboto Mono", "Vazirmatn", monospace'}}
                 >
                     {text.length && text.map(textMapFunc)}
-                    {!isTextFocussed && <Alert variant="secondary" className="type-container-alert">Click here to start typing</Alert>}
+                    {
+                        !isTextFocussed && 
+                        <Alert variant="secondary"
+                            style={
+                                {
+                                    fontSize: "16px",
+                                    position:"absolute",
+                                    top:document.querySelector(".type-container").scrollTop,
+                                    width:"100%",
+                                    height:"100%",
+                                }
+                            }
+                        >Click here to start typing</Alert>
+                    }
                 </Container>
             </div>
         </>
