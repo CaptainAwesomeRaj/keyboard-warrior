@@ -1,17 +1,33 @@
-import { useContext} from "react";
+import { useContext, useEffect} from "react";
 import { Alert, Container } from "react-bootstrap";
 import './TypeContainer.css';
 import { AppContext } from "../../context/AppContext";
+
+
+
 export default function TypeContainer(){
     const {text} = useContext(AppContext);
     const {word,setWord} = useContext(AppContext); //stores index for text
     const {char,setChar} = useContext(AppContext); //stores index for test[word]
     const {isTextFocussed,setIsTextFocussed} = useContext(AppContext);
+
+    useEffect(()=>{
+        const arr = document.querySelectorAll(".type-container span");
+        arr.forEach((x)=>{
+            x.style.backgroundColor="inherit";
+            x.style.border="none";
+            x.style.color="white";
+        })
+    },[text]);
+
+    // 
     function textMapFunc(word,index){
-        const arr =  word.map((ch,idx)=>{return <span className={"word"+index+""+idx} key={"word"+index +""+idx}>{ch}</span>});
+        const arr =  word.map((ch,idx)=>{return <span className={"word"+index+""+idx} key={"word"+index +""+idx} style={{backgroundColor:"inherit",border:"none",color:"white"}}>{ch}</span>});
         arr.push(<span key={index} className={"space"+index}>&nbsp; </span>);
         return arr;
     }
+
+    // 
     function handleInput(event){
         var typeContainer = document.querySelector(".type-container");
 
