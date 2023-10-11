@@ -7,12 +7,14 @@ import TypeContainer from './components/typeContainer/TypeContainer';
 import { useContext } from 'react';
 import { AppContext } from './context/AppContext';
 import { AiOutlineReload } from 'react-icons/ai';
+import ResultContainer from './components/resultContainer/ResultContainer';
 function App() {
   const {user} = useContext(AppContext);
   const {setReset,showNotAvailableMessage ,setShowNotAvailableMessage} = useContext(AppContext);
   return (
     <>
       <div className="app-wrapper">
+        <ResultContainer/>
         <Alert show={showNotAvailableMessage} onClose={()=>{setShowNotAvailableMessage(false)} } dismissible> Sorry! Functionality not Available </Alert>
         <Container style={{height:'100%'}} className='pt-3'>
           <Stack gap={5} style={{height:'100%'}} className='justify-content-between'>

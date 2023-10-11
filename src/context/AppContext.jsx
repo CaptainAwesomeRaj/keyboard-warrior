@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import { generate } from "random-words";
 
 export const AppContext = createContext();
@@ -11,9 +11,20 @@ export function AppContextProvider(params) {
     const [reset,setReset] = useState(0);
     const [user,setUser] = useState("User");
     const [showNotAvailableMessage,setShowNotAvailableMessage] = useState(false);
-    
+    const [totalTime,setTotalTime] = useState(60);
+    const [timer,setTimer] = useState(60);
+    const [correctWords,setCorrectWords] = useState(0);
+    const [incorrectWords,setIncorrectWords] = useState(0);
+    const [showResult,setShowResult] = useState(false);
+    const input = useRef([]);
+
     useEffect(()=>{
-        setText(generate(1000).map((str)=>str.split('')));
+        let arr = generate(1000).map((str)=>str.split(''));
+        for(let i = 0n; i < arr.length; ++i){
+            input.current[i] = [];
+            input.current[i].length = arr[i].length + 1;
+        }
+        setText(arr);
         setWord(0);
         setChar(0);
         setIsTextFocussed(false);
@@ -31,7 +42,13 @@ export function AppContextProvider(params) {
                     setReset,
                     user,setUser,
                     showNotAvailableMessage,
-                    setShowNotAvailableMessage
+                    setShowNotAvailableMessage,
+                    totalTime,setTotalTime,
+                    correctWords,setCorrectWords,
+                    incorrectWords,setIncorrectWords,
+                    input,
+                    timer,setTimer,
+                    showResult,setShowResult
                 }
             }
         >

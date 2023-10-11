@@ -10,7 +10,9 @@ export default function TypeContainer(){
     const {word,setWord} = useContext(AppContext); //stores index for text
     const {char,setChar} = useContext(AppContext); //stores index for test[word]
     const {isTextFocussed,setIsTextFocussed} = useContext(AppContext);
-
+    let {input} = useContext(AppContext);
+    const {setCorrectWords,setIncorrectWords} = useContext(AppContext);
+    const {setShowResult} = useContext(AppContext);
     useEffect(()=>{
         const arr = document.querySelectorAll(".type-container span");
         arr.forEach((x)=>{
@@ -20,6 +22,28 @@ export default function TypeContainer(){
         })
     },[text]);
 
+    // 
+    function displayResult() {
+        let countCorrectWords = 0,countIncorrectWords = 0;
+        for(let i = 0n; i < input.current.length; ++i){
+            var enteredWord = input.current[i].join("");
+            if(enteredWord){
+                if(enteredWord.startsWith( text[i].join("")) && enteredWord.endsWith(" ")){
+                    countCorrectWords++;
+                }
+                else{
+                    countIncorrectWords++;
+                }
+            }
+            else{
+                break;
+            }
+        }
+        setCorrectWords(countCorrectWords);
+        setIncorrectWords(countIncorrectWords);
+        setShowResult(true);
+    }
+    
     // 
     function textMapFunc(word,index){
         const arr =  word.map((ch,idx)=>{return <span className={"word"+index+""+idx} key={"word"+index +""+idx} style={{backgroundColor:"inherit",border:"none",color:"white"}}>{ch}</span>});
@@ -33,8 +57,12 @@ export default function TypeContainer(){
 
         var element;
         var key = event.keyCode;
+        if(key === 13){
+            displayResult();
+        }
 
         if(key === 8){  //8 is charCode for backspace
+            input.current[word][char] = "";
             if(word === 0 && char === 0){
                 return;
             }
@@ -65,6 +93,7 @@ export default function TypeContainer(){
 
         // here comes if keyCode returns false
         key = event.key;
+        input.current[word][char] = key;
         if(text[word].length === char){
             element = document.querySelector(".space"+word);
             element.style.borderBottom = "none";
