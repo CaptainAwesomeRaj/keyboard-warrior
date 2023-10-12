@@ -30,6 +30,10 @@ export function AppContextProvider(params) {
         setWord(0);
         setChar(0);
         setIsTextFocussed(false);
+        setIsTestRunning(false);
+        for(let i = 0; i < timerUpdator.current.length; ++i){
+            clearTimeout(timerUpdator.current[i]);
+        }
     },[reset])
     useEffect(()=>{
         setTimer(totalTime);
