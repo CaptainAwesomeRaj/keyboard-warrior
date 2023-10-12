@@ -1,5 +1,4 @@
 import { Stack } from "react-bootstrap";
-import "./Footer.css"
 import { AiFillFacebook,AiOutlineInstagram,AiOutlineTwitter,AiFillYoutube,AiFillLinkedin} from "react-icons/ai";
 import { useContext } from "react";
 import {AppContext} from '../../context/AppContext';

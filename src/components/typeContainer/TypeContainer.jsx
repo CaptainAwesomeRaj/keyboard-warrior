@@ -13,6 +13,9 @@ export default function TypeContainer(){
     let {input} = useContext(AppContext);
     const {setCorrectWords,setIncorrectWords} = useContext(AppContext);
     const {setShowResult} = useContext(AppContext);
+    const {isTestRunning,setIsTestRunning} = useContext(AppContext);
+    const {setTimer,totalTime} = useContext(AppContext);
+    const {timerUpdator} = useContext(AppContext);
     useEffect(()=>{
         const arr = document.querySelectorAll(".type-container span");
         arr.forEach((x)=>{
@@ -24,6 +27,9 @@ export default function TypeContainer(){
 
     // 
     function displayResult() {
+        for(let i = 0n ;i < timerUpdator.current.length; ++i){
+            clearTimeout(timerUpdator.current[i]);
+        }
         let countCorrectWords = 0,countIncorrectWords = 0;
         for(let i = 0n; i < input.current.length; ++i){
             var enteredWord = input.current[i].join("");
@@ -53,11 +59,27 @@ export default function TypeContainer(){
 
     // 
     function handleInput(event){
+        if(!isTestRunning){
+            setIsTestRunning(true);
+
+            timerUpdator.current.length = totalTime;
+            for(let i = 1; i <= totalTime; ++i ){
+                timerUpdator.current[i - 1] = setTimeout(()=>{
+                    setTimer((x)=>x - 1);
+                },i * 1000);
+            }
+            timerUpdator.current.push(setTimeout( ()=>{
+                setIsTestRunning(false);
+                displayResult();
+            },totalTime * 1000))
+        }
+
         var typeContainer = document.querySelector(".type-container");
 
         var element;
         var key = event.keyCode;
         if(key === 13){
+            setIsTestRunning(false);
             displayResult();
         }
 

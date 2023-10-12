@@ -17,6 +17,8 @@ export function AppContextProvider(params) {
     const [incorrectWords,setIncorrectWords] = useState(0);
     const [showResult,setShowResult] = useState(false);
     const input = useRef([]);
+    const [isTestRunning,setIsTestRunning] = useState(false);
+    const timerUpdator = useRef([]);
 
     useEffect(()=>{
         let arr = generate(1000).map((str)=>str.split(''));
@@ -48,7 +50,9 @@ export function AppContextProvider(params) {
                     incorrectWords,setIncorrectWords,
                     input,
                     timer,setTimer,
-                    showResult,setShowResult
+                    showResult,setShowResult,
+                    isTestRunning,setIsTestRunning,
+                    timerUpdator
                 }
             }
         >
