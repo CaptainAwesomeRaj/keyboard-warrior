@@ -6,11 +6,10 @@ import './TimerContainer.css';
 
 
 export default function TimerContainer() {
-    const {totalTime,timer,setTotalTime,isTestRunning,setTimer} = useContext(AppContext);
+    const {totalTime,timer,setTotalTime,isTestRunning} = useContext(AppContext);
     
     const handleTimerChange = (event) => {
         let time = parseInt(event.target.value);
-        setTimer(time);
         setTotalTime(time);
     };
 
@@ -23,7 +22,7 @@ export default function TimerContainer() {
 
     if(isTestRunning)
     return(
-        <Container>
+        <Container> 
             <Row className="justify-content-center">
                 <Col xs="auto">
                 <div className="timer h5">{formatTime(timer)}</div>

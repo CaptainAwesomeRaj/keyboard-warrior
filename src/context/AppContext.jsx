@@ -31,6 +31,9 @@ export function AppContextProvider(params) {
         setChar(0);
         setIsTextFocussed(false);
     },[reset])
+    useEffect(()=>{
+        setTimer(totalTime);
+    },[reset,totalTime])
 
     return(
         <AppContext.Provider 
