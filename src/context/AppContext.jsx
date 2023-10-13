@@ -11,14 +11,17 @@ export function AppContextProvider(params) {
     const [reset,setReset] = useState(0);
     const [user,setUser] = useState("User");
     const [showNotAvailableMessage,setShowNotAvailableMessage] = useState(false);
-    const [totalTime,setTotalTime] = useState(60);
-    const [timer,setTimer] = useState(60);
+    const [totalTime,setTotalTime] = useState(5);
+    const [timer,setTimer] = useState(5);
     const [correctWords,setCorrectWords] = useState(0);
     const [incorrectWords,setIncorrectWords] = useState(0);
     const [showResult,setShowResult] = useState(false);
     const input = useRef([]);
     const [isTestRunning,setIsTestRunning] = useState(false);
     const timerUpdator = useRef([]);
+    const [netSpeed,setNetSpeed] = useState(0);
+    const [grossSpeed,setGrossSpeed] = useState(0);
+
 
     useEffect(()=>{
         let arr = generate(1000).map((str)=>str.split(''));
@@ -59,7 +62,9 @@ export function AppContextProvider(params) {
                     timer,setTimer,
                     showResult,setShowResult,
                     isTestRunning,setIsTestRunning,
-                    timerUpdator
+                    timerUpdator,
+                    setNetSpeed,setGrossSpeed,
+                    netSpeed,grossSpeed
                 }
             }
         >

@@ -6,7 +6,7 @@ import { AppContext } from "../../context/AppContext";
 
 
 export default function TypeContainer(){
-    const {text} = useContext(AppContext);
+    const {text,setReset} = useContext(AppContext);
     const {word,setWord} = useContext(AppContext); //stores index for text
     const {char,setChar} = useContext(AppContext); //stores index for test[word]
     const {isTextFocussed,setIsTextFocussed} = useContext(AppContext);
@@ -14,8 +14,8 @@ export default function TypeContainer(){
     const {setCorrectWords,setIncorrectWords} = useContext(AppContext);
     const {setShowResult} = useContext(AppContext);
     const {isTestRunning,setIsTestRunning} = useContext(AppContext);
-    const {setTimer,totalTime} = useContext(AppContext);
-    const {timerUpdator} = useContext(AppContext);
+    const {setTimer,totalTime,timer} = useContext(AppContext);
+    const {timerUpdator,setNetSpeed,setGrossSpeed} = useContext(AppContext);
     useEffect(()=>{
         const arr = document.querySelectorAll(".type-container span");
         arr.forEach((x)=>{
@@ -27,7 +27,7 @@ export default function TypeContainer(){
 
     // 
     function displayResult() {
-        for(let i = 0n ;i < timerUpdator.current.length; ++i){
+        for(let i = 0n; i < timerUpdator.current.length; ++i){
             clearTimeout(timerUpdator.current[i]);
         }
         let countCorrectWords = 0,countIncorrectWords = 0;
@@ -45,9 +45,17 @@ export default function TypeContainer(){
                 break;
             }
         }
+        console.log("countCorrectWords " + countCorrectWords);
+        console.log("countIncorrectWords " + countIncorrectWords);
+        console.log("totalTime " +totalTime);
+        console.log("timer " + timer);
         setCorrectWords(countCorrectWords);
         setIncorrectWords(countIncorrectWords);
+        setNetSpeed(parseInt(countCorrectWords / ((totalTime - timer) / 60)));
+        setGrossSpeed(parseInt((countCorrectWords + countIncorrectWords) / ((totalTime - timer) / 60)));
         setShowResult(true);
+        setReset((x)=>x + 1);
+        
     }
     
     // 
@@ -63,7 +71,7 @@ export default function TypeContainer(){
             setIsTestRunning(true);
 
             timerUpdator.current.length = totalTime;
-            for(let i = 1; i <= totalTime; ++i ){
+            for(let i = 1; i < totalTime; ++i ){
                 timerUpdator.current[i - 1] = setTimeout(()=>{
                     setTimer((x)=>x - 1);
                 },i * 1000);
