@@ -11,8 +11,8 @@ export function AppContextProvider(params) {
     const [reset,setReset] = useState(0);
     const [user,setUser] = useState("User");
     const [showNotAvailableMessage,setShowNotAvailableMessage] = useState(false);
-    const [totalTime,setTotalTime] = useState(5);
-    const [timer,setTimer] = useState(5);
+    const [totalTime,setTotalTime] = useState(60);
+    const [timer,setTimer] = useState(60);
     const [correctWords,setCorrectWords] = useState(0);
     const [incorrectWords,setIncorrectWords] = useState(0);
     const [showResult,setShowResult] = useState(false);
