@@ -42,6 +42,12 @@ export function AppContextProvider(params) {
         setTimer(totalTime);
     },[reset,totalTime])
 
+    useEffect(()=>{
+        setNetSpeed(parseInt(correctWords / ((totalTime - timer) / 60)));
+        setGrossSpeed(parseInt((correctWords +incorrectWords) / ((totalTime - timer) / 60)));
+    }
+    ,[correctWords,incorrectWords,setNetSpeed,setGrossSpeed])
+
     return(
         <AppContext.Provider 
             value={

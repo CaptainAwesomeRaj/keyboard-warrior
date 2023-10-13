@@ -14,8 +14,8 @@ export default function TypeContainer(){
     const {setCorrectWords,setIncorrectWords} = useContext(AppContext);
     const {setShowResult} = useContext(AppContext);
     const {isTestRunning,setIsTestRunning} = useContext(AppContext);
-    const {setTimer,totalTime,timer} = useContext(AppContext);
-    const {timerUpdator,setNetSpeed,setGrossSpeed} = useContext(AppContext);
+    const {setTimer,totalTime} = useContext(AppContext);
+    const {timerUpdator} = useContext(AppContext);
     useEffect(()=>{
         const arr = document.querySelectorAll(".type-container span");
         arr.forEach((x)=>{
@@ -24,7 +24,7 @@ export default function TypeContainer(){
             x.style.color="white";
         })
     },[text]);
-
+    
     // 
     function displayResult() {
         for(let i = 0n; i < timerUpdator.current.length; ++i){
@@ -45,14 +45,9 @@ export default function TypeContainer(){
                 break;
             }
         }
-        console.log("countCorrectWords " + countCorrectWords);
-        console.log("countIncorrectWords " + countIncorrectWords);
-        console.log("totalTime " +totalTime);
-        console.log("timer " + timer);
+
         setCorrectWords(countCorrectWords);
         setIncorrectWords(countIncorrectWords);
-        setNetSpeed(parseInt(countCorrectWords / ((totalTime - timer) / 60)));
-        setGrossSpeed(parseInt((countCorrectWords + countIncorrectWords) / ((totalTime - timer) / 60)));
         setShowResult(true);
         setReset((x)=>x + 1);
         
@@ -69,7 +64,7 @@ export default function TypeContainer(){
     function handleInput(event){
         if(!isTestRunning){
             setIsTestRunning(true);
-
+            
             timerUpdator.current.length = totalTime;
             for(let i = 1; i < totalTime; ++i ){
                 timerUpdator.current[i - 1] = setTimeout(()=>{
@@ -78,7 +73,10 @@ export default function TypeContainer(){
             }
             timerUpdator.current.push(setTimeout( ()=>{
                 setIsTestRunning(false);
-                displayResult();
+                setTimer((x)=>{
+                    displayResult();
+                    return 0;
+                })
             },totalTime * 1000))
         }
 
