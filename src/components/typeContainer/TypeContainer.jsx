@@ -155,27 +155,41 @@ export default function TypeContainer(){
     return(
         <>  
             <div className="type-container-wrapper">
-                <Container className="type-container" tabIndex={0} 
+                {
+                    !isTextFocussed && 
+                    <div id="alert-container"
+                        style={
+                            {
+                                fontSize: "16px",
+                                position:"absolute",
+                                width:"100%",
+                                height:"100%",
+                                zIndex:"1"
+                            }
+                        }
+                        tabIndex={0}
+                        onClick={()=>{
+                            let inputBox = document.querySelector(".type-container-input");
+                            inputBox.focus();
+                        }}
+                    >
+                        <Alert variant="primary"
+                        style={
+                            {height:"100%"}
+                        }                              
+
+                        >Click here to start typing</Alert>
+                    </div>
+                }
+                <input type="text" className="type-container-input" style={{position:"absolute", zIndex:"-1"}}
                     onFocus={()=>{setIsTextFocussed(true)}} 
                     onBlur={()=>{setIsTextFocussed(false)}}  
                     onKeyDown={handleInput}
+                />
+                <Container className="type-container" tabIndex={0} 
                     style={{fontFamily:'"Roboto Mono", "Roboto Mono", "Vazirmatn", monospace'}}
                 >
                     {text.length && text.map(textMapFunc)}
-                    {
-                        !isTextFocussed && 
-                        <Alert variant="primary"
-                            style={
-                                {
-                                    fontSize: "16px",
-                                    position:"absolute",
-                                    top:document.querySelector(".type-container")?.scrollTop,
-                                    width:"100%",
-                                    height:"100%",
-                                }
-                            }
-                        >Click here to start typing</Alert>
-                    }
                 </Container>
             </div>
         </>
