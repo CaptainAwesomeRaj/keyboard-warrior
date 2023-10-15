@@ -1,38 +1,22 @@
-import { useContext, useEffect} from "react";
+import { useState} from "react";
 import { Alert, Container } from "react-bootstrap";
 import './TypeContainer.css';
-import { AppContext } from "../../context/AppContext";
+import ResultContainer from "../resultContainer/ResultContainer";
 
 
 
-export default function TypeContainer(){
-    const {text,setReset} = useContext(AppContext);
-    const {word,setWord} = useContext(AppContext); //stores index for text
-    const {char,setChar} = useContext(AppContext); //stores index for test[word]
-    const {isTextFocussed,setIsTextFocussed} = useContext(AppContext);
-    let {input} = useContext(AppContext);
-    const {setCorrectWords,setIncorrectWords} = useContext(AppContext);
-    const {setShowResult} = useContext(AppContext);
-    const {isTestRunning,setIsTestRunning} = useContext(AppContext);
-    const {setTimer,totalTime} = useContext(AppContext);
-    const {timerUpdator} = useContext(AppContext);
-    useEffect(()=>{
-        const arr = document.querySelectorAll(".type-container span");
-        arr.forEach((x)=>{
-            x.style.backgroundColor="inherit";
-            x.style.border="none";
-            x.style.color="white";
-        })
-    },[text]);
-    
-    // 
+export default function TypeContainer({text,timer,current,setReset,isTestRunning,setIsTestRunning,totalTime,setTimer,correctWords,setCorrectWords,incorrectWords,setIncorrectWords}){
+    const [isTextFocussed,setIsTextFocussed] = useState(false);
+    // props for resultcontainer
+    const [showResult,setShowResult] = useState(false);
+
     function displayResult() {
-        for(let i = 0n; i < timerUpdator.current.length; ++i){
-            clearTimeout(timerUpdator.current[i]);
+        for(let i = 0n; i < current.timerUpdator.length; ++i){
+            clearTimeout(current.timerUpdator[i]);
         }
         let countCorrectWords = 0,countIncorrectWords = 0;
-        for(let i = 0n; i < input.current.length; ++i){
-            var enteredWord = input.current[i].join("");
+        for(let i = 0n; i < current.input.length; ++i){
+            var enteredWord = current.input[i].join("");
             if(enteredWord){
                 if(enteredWord.startsWith( text[i].join("")) && enteredWord.endsWith(" ")){
                     countCorrectWords++;
@@ -45,12 +29,9 @@ export default function TypeContainer(){
                 break;
             }
         }
-
-        setCorrectWords(countCorrectWords);
-        setIncorrectWords(countIncorrectWords);
         setShowResult(true);
-        setReset((x)=>x + 1);
-        
+        setCorrectWords(parseInt(countCorrectWords));
+        setIncorrectWords(parseInt(countIncorrectWords));
     }
     
     // 
@@ -65,13 +46,13 @@ export default function TypeContainer(){
         if(!isTestRunning){
             setIsTestRunning(true);
             
-            timerUpdator.current.length = totalTime;
+            current.timerUpdator.length = totalTime;
             for(let i = 1; i < totalTime; ++i ){
-                timerUpdator.current[i - 1] = setTimeout(()=>{
+                current.timerUpdator[i - 1] = setTimeout(()=>{
                     setTimer((x)=>x - 1);
                 },i * 1000);
             }
-            timerUpdator.current.push(setTimeout( ()=>{
+            current.timerUpdator.push(setTimeout( ()=>{
                 setIsTestRunning(false);
                 setTimer((x)=>{
                     displayResult();
@@ -84,28 +65,33 @@ export default function TypeContainer(){
 
         var element;
         var key = event.keyCode;
+
+        // 13 is for enter
         if(key === 13){
             setIsTestRunning(false);
             displayResult();
         }
 
+        if(current.input[current.wordIndex] === undefined){
+            current.input[current.wordIndex] = [];
+        }
         if(key === 8){  //8 is charCode for backspace
-            input.current[word][char] = "";
-            if(word === 0 && char === 0){
+            current.input[current.wordIndex][current.charIndex] = "";
+            if(current.wordIndex === 0 && current.charIndex === 0){
                 return;
             }
-            if(char === text[word].length){
-                element = document.querySelector(".space"+word);
-                setChar(char - 1);
+            if(current.charIndex === text[current.wordIndex].length){
+                element = document.querySelector(".space"+current.wordIndex);
+                current.charIndex--;
             }
-            else if(char === 0){
-                element = document.querySelector(".word" + word + "" + char);
-                setChar(text[word - 1].length);
-                setWord(word - 1);
+            else if(current.charIndex === 0){
+                element = document.querySelector(".word" + current.wordIndex + "" + current.charIndex);
+                current.charIndex = text[current.wordIndex - 1].length;
+                current.wordIndex--;
             }
             else{
-                element = document.querySelector(".word" + word + "" + char);
-                setChar(char - 1);
+                element = document.querySelector(".word" + current.wordIndex + "" + current.charIndex);
+                current.charIndex--;
             }
             element.style.borderBottom = "none";
             element = element.previousSibling;
@@ -121,9 +107,9 @@ export default function TypeContainer(){
 
         // here comes if keyCode returns false
         key = event.key;
-        input.current[word][char] = key;
-        if(text[word].length === char){
-            element = document.querySelector(".space"+word);
+        current.input[current.wordIndex][current.charIndex] = key;
+        if(text[current.wordIndex].length === current.charIndex){
+            element = document.querySelector(".space"+current.wordIndex);
             element.style.borderBottom = "none";
             if(key === ' '){
                 element.style.color = "green";
@@ -131,31 +117,31 @@ export default function TypeContainer(){
             else{
                 element.style.backgroundColor = "red";
             }
-            element = document.querySelector(".word"+(word+1) + "" +0)
+            element = document.querySelector(".word"+(current.wordIndex+1) + "" +0)
             element.style.borderBottom = "2px solid white";
             if(element.offsetTop - typeContainer.scrollTop === 76){
                 typeContainer.scrollTop += 36;
             }
-            setChar(0);
-            setWord((x)=>x + 1);
+            current.charIndex = 0;
+            current.wordIndex++;
         }
         else{
-            element = document.querySelector(".word"+word+""+char);
+            element = document.querySelector(".word"+current.wordIndex+""+current.charIndex);
             element.style.borderBottom = "none";
-            if(key === text[word][char]){
+            if(key === text[current.wordIndex][current.charIndex]){
                 element.style.color = "green";
             }
             else{
                 element.style.backgroundColor = "red";
             }   
-            if(char + 1 === text[word].length){
-                element = document.querySelector(".space"+word);
+            if(current.charIndex + 1 === text[current.wordIndex].length){
+                element = document.querySelector(".space"+current.wordIndex);
             }
             else{
-                element = document.querySelector(".word"+word+""+(char + 1))
+                element = document.querySelector(".word"+current.wordIndex+""+(current.charIndex + 1))
             }
             element.style.borderBottom = "2px solid white";
-            setChar((x)=>x + 1);
+            current.charIndex++;
         }
     }
     return(
@@ -183,7 +169,7 @@ export default function TypeContainer(){
                         style={
                             {height:"100%"}
                         }                              
-
+                        
                         >Click here to start typing</Alert>
                     </div>
                 }
@@ -191,12 +177,13 @@ export default function TypeContainer(){
                     onFocus={()=>{setIsTextFocussed(true)}} 
                     onBlur={()=>{setIsTextFocussed(false)}}  
                     onKeyDown={handleInput}
-                />
+                    />
                 <Container className="type-container" tabIndex={0} 
                     style={{fontFamily:'"Roboto Mono", "Roboto Mono", "Vazirmatn", monospace'}}
-                >
+                    >
                     {text.length && text.map(textMapFunc)}
                 </Container>
+                <ResultContainer timer={timer} totalTime={totalTime} correctWords={correctWords} incorrectWords={incorrectWords} showResult={showResult} setShowResult={setShowResult} setReset={setReset} current={current} />
             </div>
         </>
     )

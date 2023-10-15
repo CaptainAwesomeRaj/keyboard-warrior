@@ -1,20 +1,21 @@
-import React, { useContext,} from 'react';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { AppContext } from '../../context/AppContext';
-
-const ResultContainer = () => {
-    const {showResult,setShowResult,correctWords,incorrectWords,netSpeed,grossSpeed} = useContext(AppContext);
+const ResultContainer = (props) => {
+  function handleHide(e) {
+    props.setShowResult(false);
+    props.setReset((x)=>x + 1);
+  }
   return (
-    <Modal show={showResult} onHide={()=>{setShowResult(false);}} centered>
+    <Modal show={props.showResult} onHide={handleHide} centered>
         <div style={{backgroundColor:"#cfe2ff",color:"#052c65"}}>
             <Modal.Header closeButton>
                 <Modal.Title>Results:</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <pre>Net Speed       : {netSpeed} &#40; words per minute &#41;</pre>
-                <pre>Gross Speed     : {grossSpeed} &#40; words per minute &#41;</pre>
-                <pre>Correct Words   : { correctWords}</pre>
-                <pre>Incorrect Words : { incorrectWords}</pre>
+            <Modal.Body> 
+                <pre>Net Speed (WPM)   : {parseInt((props.correctWords) / ((props.totalTime - props.timer) / 60))}</pre>
+                <pre>Gross Speed (WPM) : {parseInt((props.correctWords + props.incorrectWords) / ((props.totalTime - props.timer) / 60))}</pre>
+                <pre>Correct Words     : {props.correctWords}</pre>
+                <pre>Incorrect Words   : {props.incorrectWords}</pre>
             </Modal.Body>
         </div>
     </Modal>
