@@ -17,6 +17,10 @@ function TestContainer() {
 
     useEffect(
         ()=>{
+            let typeContainer = document.querySelector(".type-container");
+            if(typeContainer){
+                typeContainer.scrollTop = 0;
+            }
             let arr = generate(1000);
             setText(arr.map((word)=>word.split("")));
             setIsTestRunning(false);
