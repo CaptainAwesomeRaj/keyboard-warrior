@@ -119,7 +119,7 @@ export default function TypeContainer({text,timer,current,setReset,isTestRunning
             }
             element = document.querySelector(".word"+(current.wordIndex+1) + "" +0)
             element.style.borderBottom = "2px solid white";
-            if(element.offsetTop - typeContainer.scrollTop === 76){
+            if(element.offsetTop - typeContainer.scrollTop >= 75){
                 typeContainer.scrollTop += 36;
             }
             current.charIndex = 0;
